@@ -1,0 +1,60 @@
+name: CI/CD Pipeline
+
+# Kiedy uruchomić workflow
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+# Zadania do wykonania
+jobs:
+  test:
+    name: Testowanie
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Pobranie kodu z repozytorium
+    - name: Pobierz kod
+      uses: actions/checkout@v4
+    
+    # Konfiguracja Node.js
+    - name: Skonfiguruj Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    # Instalacja zależności
+    - name: Zainstaluj zależności
+      run: npm ci
+    
+    # Uruchomienie testów
+    - name: Uruchom testy
+      run: npm test
+    
+    # Budowanie aplikacji
+    - name: Zbuduj aplikację
+      run: npm run build
+    
+    # Upload artefaktów (opcjonalne)
+    - name: Zapisz artefakty
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-files
+        path: dist/
+
+  deploy:
+    name: Deploy
+    needs: test  # Uruchom tylko jeśli testy przeszły
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'  # Tylko na branchu main
+    
+    steps:
+    - name: Pobierz kod
+      uses: actions/checkout@v4
+    
+    - name: Symulacja wdrożenia
+      run: |
+        echo "🚀 Wdrażanie aplikacji..."
+        echo "✅ Aplikacja została wdrożona!"

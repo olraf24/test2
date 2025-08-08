@@ -1,0 +1,11 @@
+{
+  "name": "moj-projekt",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jest",
+    "build": "echo 'Budowanie projektu...' && mkdir -p dist && cp src/*.js dist/"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}
